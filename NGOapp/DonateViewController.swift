@@ -10,6 +10,12 @@ import Foundation
 import UIKit
 
 class DonateViewController: UIViewController {
+    @IBOutlet weak var name: UITextField!
+    @IBOutlet weak var people: UITextField!
+    @IBOutlet weak var peoplePicker: UIPickerView!
+    @IBOutlet weak var phoneNum: UITextField!
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
