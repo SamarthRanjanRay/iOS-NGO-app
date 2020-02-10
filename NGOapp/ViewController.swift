@@ -30,6 +30,8 @@ class ViewController: UIViewController {
         imgoutlet.image = animatedImage
         locc.setTitle(loc.name, for: .normal)
         
+        let barViewControllers = self.tabBarController?.viewControllers
+        
         
     }
 

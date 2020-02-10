@@ -95,17 +95,26 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
     }
     
     @objc func callSegue() {
-        performSegue(withIdentifier: "back", sender: self)
+        performSegue(withIdentifier: "tryTUC", sender: self)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let vc = segue.destination as! ViewController
+        
+            let vcUI = segue.destination as! UITabBarController
+        
+        let vcNAV = vcUI.viewControllers?.first as! UINavigationController
+        
+        let vc = vcNAV.viewControllers.first as! ViewController
+        
             vc.loc.cordinates = coord
             guard let uf = userFriendly else {
                 print("nil aarha hai")
                 return
             }
             vc.loc.name = uf
+        
+        
+        
 
     }
     
