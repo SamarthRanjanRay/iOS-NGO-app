@@ -59,7 +59,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
     }
     
     @IBAction func submitLocation(_ sender: Any) {
-        
+        print("submiting Loc")
         let geoCoder = CLGeocoder()
         let searchedLocation = CLLocation(latitude: currentCoordinates.latitude, longitude: currentCoordinates.longitude)
         geoCoder.reverseGeocodeLocation(searchedLocation) { [weak self] (placemark, error) in
@@ -91,18 +91,12 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
             eventLocation.name = uf
             
             eventLocation.save()
-            
+            print("saved")
+            self.performSegue(withIdentifier: "unwindFromMap", sender: self)
         }
-        perform(#selector(callSegue), with: nil, afterDelay: 5)
-        
     }
     
-    @objc func callSegue() {
-        performSegue(withIdentifier: "tryTUC", sender: self)
-    }
 
-    
-    
     @IBAction func handle(_ sender: Any) {
         guard let gestureRecognizer = sender as? UILongPressGestureRecognizer else {
             return
@@ -144,4 +138,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
         let region : MKCoordinateRegion = MKCoordinateRegion(center: currentCoordinates, span: span)
         mapView.setRegion(region, animated: true)
     }
+    
+    
 }

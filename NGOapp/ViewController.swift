@@ -36,5 +36,17 @@ class ViewController: UIViewController {
 
 
     @IBOutlet weak var imgoutlet: UIImageView!
+    
+    @IBAction func gotoMap(_ sender: Any) {
+        performSegue(withIdentifier: "homeToMap", sender: self)
+    }
+    
+    @IBAction func unwindFromMap(_ unwindSegue: UIStoryboardSegue) {
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        requestLocation.setTitle(eventLocation.name, for: .normal)
+    }
+    
 }
 

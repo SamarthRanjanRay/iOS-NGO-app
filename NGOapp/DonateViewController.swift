@@ -58,11 +58,29 @@ class DonateViewController: UIViewController, UIPickerViewDataSource, UIPickerVi
         super.viewDidLoad()
     }
     @IBAction func register(_ sender: Any) {
-        userLoggedIn.username = nameTextField.text!
-        userLoggedIn.number = phoneNumTextField.text!
-        userLoggedIn.pro = ""
-        userLoggedIn.save()
         
-        performSegue(withIdentifier: "dTm", sender: self)
+        if nameTextField.text == nil || phoneNumTextField.text == nil || peopleTextField.text == nil {
+            let alert = UIAlertController(title: "Form Incomplete Error", message: "We would request you to fill all the fields of the form as it will help us know more about you and provide you our quality service.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true)
+        }
+        else {
+            userLoggedIn.username = nameTextField.text!
+            userLoggedIn.number = phoneNumTextField.text!
+            userLoggedIn.pro = ""
+            userLoggedIn.save()
+            
+            performSegue(withIdentifier: "dTm", sender: self)
+        }
+    }
+    @IBAction func fetchNewLocation(_ sender: Any) {
+        performSegue(withIdentifier: "donateToMap", sender: self)
+    }
+    
+    @IBAction func unwindFromMap(_ unwindSegue: UIStoryboardSegue) {
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        reqLoc.setTitle(eventLocation.name, for: .normal)
     }
 }

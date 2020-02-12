@@ -32,15 +32,23 @@ class VolunteerViewController: UIViewController {
     
     
     @IBAction func receiveCall(_ sender: Any) {
+        if daysVolunteer.text == nil || ageTextField.text == nil || nameTextField.text == nil || professionTextField.text == nil || numTextField.text == nil {
+            let alert = UIAlertController(title: "Form Incomplete Error", message: "We would request you to fill all the fields of the form as it will help us know more about you and provide you our quality service.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true)
+        }
+        else {
+            userLoggedIn.number = numTextField.text!
+            userLoggedIn.username = nameTextField.text!
+            userLoggedIn.pro = professionTextField.text!
+            userLoggedIn.save()
+            
+            performSegue(withIdentifier: "vTm", sender: self)
+        }
         
-        
-        userLoggedIn.number = numTextField.text!
-        userLoggedIn.username = nameTextField.text!
-        userLoggedIn.pro = professionTextField.text!
-        
-        userLoggedIn.save()
-        performSegue(withIdentifier: "vTm", sender: self)
     }
+    
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         ageTextField.resignFirstResponder()
     }

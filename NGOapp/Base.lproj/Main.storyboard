@@ -90,6 +90,10 @@
                                 <rect key="frame" x="129" y="495" width="116" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Set your location"/>
+                                <connections>
+                                    <action selector="fetchNewLocation:" destination="aK5-QX-hkC" eventType="touchUpInside" id="Hb3-xx-EUv"/>
+                                    <segue destination="Uh9-sN-b2I" kind="presentation" identifier="donateToMap" id="ya7-5E-ooU"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -203,7 +207,8 @@
                                                 <rect key="frame" x="10" y="5" width="355" height="30"/>
                                                 <state key="normal" title="location"/>
                                                 <connections>
-                                                    <segue destination="Uh9-sN-b2I" kind="presentation" identifier="loc" id="PKz-89-B1P"/>
+                                                    <action selector="gotoMap:" destination="BYZ-38-t0r" eventType="touchUpInside" id="p9M-aD-MmT"/>
+                                                    <segue destination="Uh9-sN-b2I" kind="showDetail" identifier="homeToMap" id="E6r-iq-J6c"/>
                                                 </connections>
                                             </button>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Azx-W7-rPF">
@@ -287,11 +292,11 @@
                                 </connections>
                             </mapView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Kd7-6x-fs5">
-                                <rect key="frame" x="163" y="553" width="49" height="30"/>
+                                <rect key="frame" x="163" y="553" width="49" height="38"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Submit"/>
                                 <connections>
-                                    <action selector="submitLocation:" destination="Uh9-sN-b2I" eventType="touchUpInside" id="Jct-NL-snu"/>
+                                    <action selector="submitLocation:" destination="Uh9-sN-b2I" eventType="touchUpInside" id="MTa-NQ-kbD"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -303,9 +308,11 @@
                         <outlet property="mapView" destination="ZHV-lJ-XGM" id="tld-TG-6J0"/>
                         <outlet property="searchField" destination="qW4-Ei-Z2M" id="VhV-TU-Nb9"/>
                         <segue destination="x2a-ne-eV8" kind="showDetail" identifier="tryTUC" id="ePb-eX-4o4"/>
+                        <segue destination="y2o-WA-DDm" kind="unwind" identifier="unwindFromMap" unwindAction="unwindFromMap:" id="Jw7-FT-N5z"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cxu-nK-WOw" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="y2o-WA-DDm" userLabel="Exit" sceneMemberID="exit"/>
                 <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="bPW-7g-t4y">
                     <connections>
                         <action selector="handle:" destination="Uh9-sN-b2I" id="VYu-Xu-wfX"/>
@@ -522,6 +529,7 @@
         <image name="image8" width="1200" height="800"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Q5s-Ob-Ijc"/>
+        <segue reference="ePb-eX-4o4"/>
+        <segue reference="E6r-iq-J6c"/>
     </inferredMetricsTieBreakers>
 </document>
