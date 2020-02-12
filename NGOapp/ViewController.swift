@@ -8,7 +8,7 @@
 
 import UIKit
 import CoreLocation
-
+import CoreData
 class ViewController: UIViewController {
 
     var image1: UIImage!
@@ -16,8 +16,7 @@ class ViewController: UIViewController {
     var image3: UIImage!
     var images: [UIImage]!
     var animatedImage: UIImage!
-    var loc : locationSelected = locationSelected()
-    @IBOutlet weak var locc: UIButton!
+    @IBOutlet weak var requestLocation: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,25 +27,14 @@ class ViewController: UIViewController {
         images = [image1,image2,image3]
         animatedImage = UIImage.animatedImage(with: images, duration: 5.0)
         imgoutlet.image = animatedImage
-        locc.setTitle(loc.name, for: .normal)
-        
-        let barViewControllers = self.tabBarController?.viewControllers
-        
+        eventLocation.load()
+        requestLocation.setTitle(eventLocation.name, for: .normal)
+
+        userLoggedIn.load()
         
     }
 
 
     @IBOutlet weak var imgoutlet: UIImageView!
-
-    struct locationSelected {
-        var cordinates: CLLocationCoordinate2D
-        var name: String
-        
-        init() {
-            self.cordinates = CLLocationCoordinate2DMake(0, 0)
-            self.name = "Enter your location"
-        }
-    
-    }
 }
 

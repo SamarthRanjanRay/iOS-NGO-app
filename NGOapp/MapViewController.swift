@@ -15,12 +15,12 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
+        
         locationManager.delegate = self
-        
         locationManager.requestWhenInUseAuthorization()
-        
         locationManager.startUpdatingLocation()
-        
+
         mapView.mapType = .standard
         mapView.isZoomEnabled = true
         mapView.isScrollEnabled = true
@@ -30,25 +30,25 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
     }
 
     @IBOutlet weak var mapView: MKMapView!
-    
     @IBOutlet weak var searchField: UITextField!
-
-
     @IBOutlet var longpresss: UILongPressGestureRecognizer!
-    
     let locationManager : CLLocationManager = CLLocationManager()
-    var coord : CLLocationCoordinate2D = CLLocationCoordinate2DMake(0, 0)
-    var userFriendly : String? = String()
+    var currentCoordinates : CLLocationCoordinate2D = CLLocationCoordinate2DMake(0, 0)
+    var userFriendlyText : String? = String()
     var update : Bool = true
+   // var viewControllerName : String = ""
     
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if update == true {
-            coord = (locations.last?.coordinate)!
+            if eventLocation.cordinates.latitude == 0 && eventLocation.cordinates.longitude == 0 {
+                currentCoordinates = (locations.last?.coordinate)!
+            }
+            else {
+                currentCoordinates = eventLocation.cordinates
+            }
             createAnno()
             update = false
-        } else {
-            return
         }
         
     }
@@ -61,8 +61,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
     @IBAction func submitLocation(_ sender: Any) {
         
         let geoCoder = CLGeocoder()
-        let loc = CLLocation(latitude: coord.latitude, longitude: coord.longitude)
-        geoCoder.reverseGeocodeLocation(loc) { [weak self] (placemark, error) in
+        let searchedLocation = CLLocation(latitude: currentCoordinates.latitude, longitude: currentCoordinates.longitude)
+        geoCoder.reverseGeocodeLocation(searchedLocation) { [weak self] (placemark, error) in
             guard let self = self else {
                 return
             }
@@ -79,15 +79,18 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
             guard let subloc = placemark.subLocality else {
                 return
             }
-            self.userFriendly = name + subloc
-            guard let uf = self.userFriendly else {
-                print("string hi ni bana")
+            self.userFriendlyText = name + ", " + subloc
+            guard let uf = self.userFriendlyText else {
+                let alert = UIAlertController(title: "Location Name Error", message: "The Requested place cannot be converted into text for everyone's use, try shifting the annoation a bit.", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                self.present(alert, animated: true)
                 return
             }
-            print("string bann gaya:",uf)
             
+            eventLocation.cordinates = self.currentCoordinates
+            eventLocation.name = uf
             
-            
+            eventLocation.save()
             
         }
         perform(#selector(callSegue), with: nil, afterDelay: 5)
@@ -97,26 +100,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
     @objc func callSegue() {
         performSegue(withIdentifier: "tryTUC", sender: self)
     }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-            let vcUI = segue.destination as! UITabBarController
-        
-        let vcNAV = vcUI.viewControllers?.first as! UINavigationController
-        
-        let vc = vcNAV.viewControllers.first as! ViewController
-        
-            vc.loc.cordinates = coord
-            guard let uf = userFriendly else {
-                print("nil aarha hai")
-                return
-            }
-            vc.loc.name = uf
-        
-        
-        
 
-    }
     
     
     @IBAction func handle(_ sender: Any) {
@@ -124,16 +108,16 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
             return
         }
         let locate = gestureRecognizer.location(in: mapView)
-        coord = mapView.convert(locate, toCoordinateFrom: mapView)
+        currentCoordinates = mapView.convert(locate, toCoordinateFrom: mapView)
         createAnno()
     }
     
     @IBAction func searchPlace(_ sender: Any) {
-        let req = MKLocalSearch.Request()
+        let searchRequest = MKLocalSearch.Request()
         
-        req.naturalLanguageQuery = searchField.text
+        searchRequest.naturalLanguageQuery = searchField.text
         
-        let active = MKLocalSearch(request: req)
+        let active = MKLocalSearch(request: searchRequest)
         active.start { (response, error) in
             guard let res = response else {
                 let alert = UIAlertController(title: "Location Search Error", message: "The Requested place cannot be searched, try using some other keywords of the same place. Or you can always scroll the map if you want.", preferredStyle: .alert)
@@ -141,7 +125,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
                 self.present(alert, animated: true)
                 return
             }
-            self.coord = CLLocationCoordinate2DMake(res.boundingRegion.center.latitude, res.boundingRegion.center.longitude)
+            self.currentCoordinates = CLLocationCoordinate2DMake(res.boundingRegion.center.latitude, res.boundingRegion.center.longitude)
             self.createAnno()
         }
     }
@@ -152,12 +136,12 @@ class MapViewController: UIViewController, CLLocationManagerDelegate {
             mapView.removeAnnotations(mapView.annotations)
         }
         let annotation = MKPointAnnotation()
-        annotation.coordinate = coord
-        annotation.title = "YOU"
-        annotation.subtitle = "event location"
+        annotation.coordinate = currentCoordinates
+        annotation.title = "Selected Location"
+        annotation.subtitle = "This will be saved for future references"
         mapView.addAnnotation(annotation)
-        let span : MKCoordinateSpan = MKCoordinateSpan(latitudeDelta: 0.001, longitudeDelta: 0.001)
-        let region : MKCoordinateRegion = MKCoordinateRegion(center: coord, span: span)
+        let span : MKCoordinateSpan = MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)
+        let region : MKCoordinateRegion = MKCoordinateRegion(center: currentCoordinates, span: span)
         mapView.setRegion(region, animated: true)
     }
 }
